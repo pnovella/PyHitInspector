@@ -24,7 +24,7 @@ class WaveInspector(AAlgo):
         
         except KeyError: self.sType = "" 
 
-        try: self.drawEach = self.strings["DRAW_EACH"]
+        try: self.drawEach = self.ints["DRAW_EACH"]
         
         except KeyError: self.drawEach = False 
 
@@ -76,13 +76,35 @@ class WaveInspector(AAlgo):
                 amps.append(tslice[1])
             
             self.hman.graph(gname,times,amps)
-            
+
+            pstimes,petimes = [],[] 
+
+            for pulse in wf.GetPulses():
+                
+                pstimes.append(pulse.GetStartTime())
+                
+                petimes.append(pulse.GetEndTime())
+                
             if self.drawEach:
 
                 self.hman.style1d()
                 
                 self.hman.drawGraph(gname,"APL")
-            
+                
+                ymin = self.hman[gname].GetHistogram().GetYaxis().GetXmin()
+
+                ymax = self.hman[gname].GetHistogram().GetYaxis().GetXmax()
+
+                for stime,etime in zip(pstimes,petimes):
+                    
+                    self.hman.drawLine(stime,ymin,stime,ymax,
+                                       
+                                       lineType=2,lineColor="red")
+
+                    self.hman.drawLine(etime,ymin,etime,ymax,
+
+                                       lineType=2,lineColor="red")
+
                 self.wait()
 
         self.drawWaveforms(names);

@@ -22,7 +22,7 @@ CNTJob SAVE I 0
 CNTJob NEVENTS I 1
 
 #---------- FIRST EVENS TO ANALYZE ----------#
-CNTJob FEVENT I 2
+CNTJob FEVENT I 0
 
 #--------- ALGORITHMS -------#
 CNTJob ALGOS SV 1
@@ -31,6 +31,8 @@ WaveInspector
 #--------- WaveInspector params -------#
 
 WaveInspector SENSOR_TYPE S gate.PMT
+
+WaveInspector DRAW_EACH I 1
 
 #------------- log file -------------#
 CNTJob FLOG I 1
