@@ -1,0 +1,40 @@
+
+
+
+#--------- PATHS with modules to be used -------#
+CNTJob PATHS SV 1
+/home/pnovella/Physics/NEXT/sw/PyHitInspector/algos
+
+#--------- DATA -------#
+CNTJob INPUT_DATA SV 1
+/home/pnovella/Physics/NEXT/DATA/DST_Na22_3200_000_RP.root
+
+#--------- DATA READER -------#
+CNTJob READER S gateReader
+
+#--------- DATA WRITER -------#
+CNTJob WRITER S gateWriter
+
+#------ SAVE EVENTS IN OUTPUT FILE ----------# 
+CNTJob SAVE I 0
+
+#---------- NUMBER OF EVENTS TO ANALYZE ----------#
+CNTJob NEVENTS I 10000000
+
+#---------- FIRST EVENS TO ANALYZE ----------#
+CNTJob FEVENT I 0
+
+#--------- ALGORITHMS -------#
+CNTJob ALGOS SV 1
+PulsAna
+
+#--------- PulsAna params -------#
+
+PulsAna SENSOR_TYPE S gate.PMT
+
+#------------- log file -------------#
+CNTJob FLOG I 1
+CNTJob FLOG S PulsAna.log
+
+#---------- histogram file ----------#
+CNTJob FHISTOS S PulsAna.root
