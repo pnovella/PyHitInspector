@@ -19,24 +19,22 @@ CNTJob WRITER S gateWriter
 CNTJob SAVE I 0
 
 #---------- NUMBER OF EVENTS TO ANALYZE ----------#
-CNTJob NEVENTS I 10000
+CNTJob NEVENTS I 1000000
 
 #---------- FIRST EVENS TO ANALYZE ----------#
-CNTJob FEVENT I 12
+CNTJob FEVENT I 0
 
 #--------- ALGORITHMS -------#
 CNTJob ALGOS SV 1
-WaveInspector
+PulsAna
 
-#--------- WaveInspector params -------#
+#--------- PulsAna params -------#
 
-WaveInspector SENSOR_TYPE S gate.PMT
-
-WaveInspector DRAW_EACH I 1
+PulsAna SENSOR_TYPE S gate.PMT
 
 #------------- log file -------------#
 CNTJob FLOG I 1
-CNTJob FLOG S WaveInspector.log
+CNTJob FLOG S PulsAna.log
 
 #---------- histogram file ----------#
-CNTJob FHISTOS S WaveInspector.root
+CNTJob FHISTOS S PulsAna.root

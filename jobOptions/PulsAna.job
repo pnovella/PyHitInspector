@@ -6,8 +6,17 @@ CNTJob PATHS SV 1
 /home/pnovella/Physics/NEXT/sw/PyHitInspector/algos
 
 #--------- DATA -------#
-CNTJob INPUT_DATA SV 1
-/home/pnovella/Physics/NEXT/DATA/DST_Na22_3200_000_RP.root
+CNTJob INPUT_DATA SV 10
+/home/pnovella/Physics/NEXT/DATA/DST_Na22_3200_000_RP_NWF.root
+/home/pnovella/Physics/NEXT/DATA/DST_Na22_3200_001_RP_NWF.root
+/home/pnovella/Physics/NEXT/DATA/DST_Na22_3200_002_RP_NWF.root
+/home/pnovella/Physics/NEXT/DATA/DST_Na22_3200_003_RP_NWF.root
+/home/pnovella/Physics/NEXT/DATA/DST_Na22_3200_004_RP_NWF.root
+/home/pnovella/Physics/NEXT/DATA/DST_Na22_3200_005_RP_NWF.root
+/home/pnovella/Physics/NEXT/DATA/DST_Na22_3200_006_RP_NWF.root
+/home/pnovella/Physics/NEXT/DATA/DST_Na22_3200_007_RP_NWF.root
+/home/pnovella/Physics/NEXT/DATA/DST_Na22_3200_008_RP_NWF.root
+/home/pnovella/Physics/NEXT/DATA/DST_Na22_3200_009_RP_NWF.root
 
 #--------- DATA READER -------#
 CNTJob READER S gateReader
@@ -19,7 +28,7 @@ CNTJob WRITER S gateWriter
 CNTJob SAVE I 0
 
 #---------- NUMBER OF EVENTS TO ANALYZE ----------#
-CNTJob NEVENTS I 10000000
+CNTJob NEVENTS I 1000000
 
 #---------- FIRST EVENS TO ANALYZE ----------#
 CNTJob FEVENT I 0

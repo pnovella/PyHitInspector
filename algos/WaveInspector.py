@@ -1,9 +1,10 @@
 
 from Centella.AAlgo import AAlgo
 from Centella.physical_constants import *
+from Centella.system_of_units import *
 
 from ROOT import gSystem
-gSystem.Load("$GATE_LIB/libGATE")
+gSystem.Load("$GATE_DIR/lib/libGATE")
 
 from ROOT import gate
 
@@ -50,9 +51,9 @@ class WaveInspector(AAlgo):
         else: pmts = event.GetHits()
         
         self.npmts = len(pmts)
-      
+        
         names = []
-
+        
         for pmt in pmts: 
             
             times, amps = [],[]
@@ -63,6 +64,8 @@ class WaveInspector(AAlgo):
             
             pmtid = pmt.GetSensorID() 
             
+            if (pmtid < 20 ): continue # no data in those channels
+
             stype = pmt.GetSensorType() 
             
             gname = "Waveform_%s_%i_Trig_%i"%(stype,pmtid,self.evtid)
@@ -70,21 +73,37 @@ class WaveInspector(AAlgo):
             names.append(gname)
 
             for tslice in data:
-
-                times.append(tslice[0])
+                
+                times.append(tslice[0]*wf.GetSampWidth()/microsecond)
                 
                 amps.append(tslice[1])
             
             self.hman.graph(gname,times,amps)
+            
+            #self.hman[gname+"_graphAxis"].GetXaxis().SetRangeUser(400,401)
 
-            pstimes,petimes = [],[] 
+            pstimes,petimes,colors = [],[],[] 
 
             for pulse in wf.GetPulses():
-                
+            
                 pstimes.append(pulse.GetStartTime())
                 
                 petimes.append(pulse.GetEndTime())
                 
+                if pulse.find_sstore("RecoPulse"): 
+
+                    color="red"
+
+                    pstimes[-1]=pstimes[-1]/microsecond
+
+                    petimes[-1]=petimes[-1]/microsecond
+
+                else: color = "blue"
+
+                colors.append(color)
+            
+            #if pstimes[-1]<400: return #!!!!!
+
             if self.drawEach:
 
                 self.hman.style1d()
@@ -95,15 +114,15 @@ class WaveInspector(AAlgo):
 
                 ymax = self.hman[gname].GetHistogram().GetYaxis().GetXmax()
 
-                for stime,etime in zip(pstimes,petimes):
+                for stime,etime,color in zip(pstimes,petimes,colors):
                     
                     self.hman.drawLine(stime,ymin,stime,ymax,
                                        
-                                       lineType=2,lineColor="red")
-
+                                       lineType=2,lineColor=color)
+                    
                     self.hman.drawLine(etime,ymin,etime,ymax,
 
-                                       lineType=2,lineColor="red")
+                                       lineType=2,lineColor=color)
 
                 self.wait()
 

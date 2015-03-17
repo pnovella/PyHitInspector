@@ -7,7 +7,7 @@ CNTJob PATHS SV 1
 
 #--------- DATA -------#
 CNTJob INPUT_DATA SV 1
-/home/pnovella/Physics/NEXT/DATA/DST_Cs137_3345_000_RP.root
+//home/pnovella/Physics/NEXT/DATA/myOutputDST.root
 
 #--------- DATA READER -------#
 CNTJob READER S gateReader
@@ -19,24 +19,24 @@ CNTJob WRITER S gateWriter
 CNTJob SAVE I 0
 
 #---------- NUMBER OF EVENTS TO ANALYZE ----------#
-CNTJob NEVENTS I 10000
+CNTJob NEVENTS I 1
 
 #---------- FIRST EVENS TO ANALYZE ----------#
-CNTJob FEVENT I 12
+CNTJob FEVENT I 0
 
 #--------- ALGORITHMS -------#
 CNTJob ALGOS SV 1
-WaveInspector
+HitMapInspector
 
 #--------- WaveInspector params -------#
 
-WaveInspector SENSOR_TYPE S gate.PMT
+HitMapInspector SENSOR_TYPE S gate.PMT
 
-WaveInspector DRAW_EACH I 1
+HitMapInspector DRAW_EACH I 1
 
 #------------- log file -------------#
 CNTJob FLOG I 1
-CNTJob FLOG S WaveInspector.log
+CNTJob FLOG S HitMapInspector.log
 
 #---------- histogram file ----------#
-CNTJob FHISTOS S WaveInspector.root
+CNTJob FHISTOS S HitMapInspector.root

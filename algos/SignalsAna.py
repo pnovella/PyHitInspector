@@ -7,7 +7,7 @@ gSystem.Load("$GATE_DIR/lib/libGATE")
 
 from ROOT import gate
 
-class PulsAna(AAlgo):
+class SignalsAna(AAlgo):
 
     def __init__(self,param=False,level = 1,label="",**kargs):
 
@@ -16,7 +16,7 @@ class PulsAna(AAlgo):
         """
         
             
-        self.name='PulsAna'
+        self.name='SignalsAna'
         
         AAlgo.__init__(self,param,level,self.name,0,label,kargs)
 
@@ -30,11 +30,11 @@ class PulsAna(AAlgo):
         """
         """
         
-        self.m.log(1,'+++Init method of PulsAna algorithm+++')
+        self.m.log(1,'+++Init method of SignalsAna algorithm+++')
         
-        self.bookPulHistos("RP_")
+        self.bookPulHistos("S1_")
 
-        self.bookPulHistos("ART_")
+        self.bookPulHistos("S2_")
         
         return
 
@@ -61,19 +61,31 @@ class PulsAna(AAlgo):
                  
                 if pulse.find_sstore("RecoPulse"): 
                     
-                    self.fillHistos("RP_",pulse)
+                    if self.isS1like(pulse): self.fillHistos("S1_",pulse)
                     
-                else: self.fillHistos("ART_",pulse)
+                    elif self.isS2like(pulse): self.fillHistos("S2_",pulse)
                 
         return True
 
     def finalize(self):
         
-        self.m.log(1,'+++End method of PulsAna algorithm+++')
+        self.m.log(1,'+++End method of SignalsAna algorithm+++')
 
         self.drawHistos()
 
         return
+        
+    def isS1like(self,pulse):
+        
+        t = pulse.GetStartTime()/microsecond
+
+        return ( t>99 and t<100 )
+
+    def isS2like(self,pulse):
+        
+        t = pulse.GetStartTime()/microsecond
+
+        return ( t>102 and t<400 )
 
     def drawHistos(self):
         
@@ -81,26 +93,23 @@ class PulsAna(AAlgo):
         
         self.hman.statsPanel(1111)
 
-        hnames = [h.split('_')[-1] for h in self.hman.keys() if "ART" not in h]
+        hnames = [h.split('_')[-1] for h in self.hman.keys() if "S1" not in h]
         
         for h in hnames: 
 
-            self.hman.draw("ART_"+h,"blue")
+            self.hman.draw("S1_"+h,"blue")
             
-            self.hman.draw("RP_"+h,"red","","same")
+            self.hman.draw("S2_"+h,"red","","same")
             
             self.wait()
 
     def fillHistos(self,label,pulse):
         
-        if label=="RP_": 
+        
+        if not pulse.GetAmplitude(): return
             
-            if not pulse.GetAmplitude(): return
+        unit = microsecond
             
-            unit = microsecond
-            
-        else: unit = 1.
-
         self.hman.fill(label+"Q",pulse.GetAmplitude())
         
         self.hman.fill(label+"sT",pulse.GetStartTime()/unit)
@@ -113,41 +122,22 @@ class PulsAna(AAlgo):
 
         self.hman.fill(label+"mA",pulse.GetMaxADC())
         
-        self.hman.fill(label+"QT",pulse.GetAmplitude(),
-                       
-                       pulse.GetStartTime()/unit)
-
-        self.hman.fill(label+"WT",width,pulse.GetStartTime()/unit)
-
-        self.hman.fill(label+"AT",pulse.GetMaxADC(),pulse.GetStartTime()/unit)
-
         return 
         
 
     def bookPulHistos(self,label):
         
-        self.hman.h1(label+"Q","Q;Charge (ADC);Entries",1000,0,1000)
+        self.hman.h1(label+"Q","Q;Charge (ADC);Entries",1000,0,10000)
         
         self.hman.h1(label+"sT","sT;Start Time (#mus); Entries",800,0,800)
 
         self.hman.h1(label+"eT","eT;End Time (#mus); Entries",800,0,800)
         
-        self.hman.h1(label+"wT","wT;Time Width(#mus); Entries",2000,0,100)
+        self.hman.h1(label+"wT","wT;Time Width(#mus); Entries",2000,0,200)
 
-        self.hman.h1(label+"mA","mA;Max. Amplitude (ADC); Entries",100,0,100)
+        self.hman.h1(label+"mA","mA;Max. Amplitude (ADC); Entries",300,0,300)
 
-        self.hman.h2(label+"QT","QT;Charge (ADC); Start Time (#mus);",
-                     
-                     1000,0,1000,200,0,400)
-
-
-        self.hman.h2(label+"WT","WT;Width (#mus); Start Time (#mus);",
-                     
-                     100,0,100,200,0,400)
         
-        self.hman.h2(label+"AT","AT;Max. amplitude (ADC); Start Time (#mus);",
-                     
-                     100,0,100,200,0,400)
 
         return
         
